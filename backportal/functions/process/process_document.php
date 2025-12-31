@@ -3,6 +3,7 @@ require __DIR__ . "/../../sap/functions.php";
 require __DIR__ . "/../../ateb/generarcfd.php";
 require __DIR__ . "/../../vendor/autoload.php";
 require __DIR__ . "/../../ateb/helpers_test.php";
+require __DIR__ . "/helper_document_cpanel.php";
 require __DIR__ . "/helpers.php";
 
 use Dotenv\Dotenv;
@@ -250,7 +251,28 @@ function procesarDocumentos(callable $onLog = null)
                 $contexto
             );
             if ($res["ok"]) {
+
+                // 1️⃣ Subir PDF a cPanel
+                $pdfLocal = $res["rutaPdf"] ?? null;
+
+                $pdfUrl = null;
+                if ($pdfLocal && file_exists($pdfLocal)) {
+                    $pdfUrl = subirPdfACpanel($pdfLocal);
+                }
+
+                // 2️⃣ Guardar resultado en cPanel DB
+                guardarResultadoEnCpanel([
+                    "tipo" => "FACTURA",
+                    "docEntry" => $doc,
+                    "prefijo" => $prefijoDoc,
+                    "folio" => $folio,
+                    "cufe" => $res["cufe"] ?? null,
+                    "estado" => "FIRMADO",
+                    "mensaje_error" => null,
+                    "pdf_url" => $pdfUrl
+                ]);
                 SAP::change_U_Filtro_SAP($doc, "1", true);
+
                 $log(["type" => "log", "msg" => "✅ Factura firmada correctamente."]);
                 $log([
                     "type" => "success",
@@ -260,6 +282,17 @@ function procesarDocumentos(callable $onLog = null)
                 ]);
 
             } else {
+
+                guardarResultadoEnCpanel([
+                    "tipo" => "FACTURA",
+                    "docEntry" => $doc,
+                    "prefijo" => $prefijoDoc,
+                    "folio" => $folio,
+                    "cufe" => null,
+                    "estado" => "ERROR",
+                    "mensaje_error" => $res["mensaje"],
+                    "pdf_url" => null
+                ]);
                 ATEB::guardarXMLFallido("FACTURA", $doc, $xml);
                 SAP::change_U_Filtro_SAP($doc, "2", true);
                 $log([
@@ -419,6 +452,25 @@ function procesarDocumentos(callable $onLog = null)
                 $contexto
             );
             if ($res["ok"]) {
+                // 1️⃣ Subir PDF a cPanel
+                $pdfLocal = $res["rutaPdf"] ?? null;
+
+                $pdfUrl = null;
+                if ($pdfLocal && file_exists($pdfLocal)) {
+                    $pdfUrl = subirPdfACpanel($pdfLocal);
+                }
+
+                // 2️⃣ Guardar resultado en cPanel DB
+                guardarResultadoEnCpanel([
+                    "tipo" => "NOTA",
+                    "docEntry" => $doc,
+                    "prefijo" => $prefijoDoc,
+                    "folio" => $folio,
+                    "cufe" => $res["cufe"] ?? null,
+                    "estado" => "FIRMADO",
+                    "mensaje_error" => null,
+                    "pdf_url" => $pdfUrl
+                ]);
                 SAP::change_U_Filtro_SAP($not, "1", false);
                 $log(["type" => "log", "msg" => "✅ Nota crédito firmada correctamente."]);
                 $log([
@@ -428,7 +480,16 @@ function procesarDocumentos(callable $onLog = null)
                     "msg" => "Nota crédito firmada correctamente"
                 ]);
             } else {
-
+                guardarResultadoEnCpanel([
+                    "tipo" => "NOTA",
+                    "docEntry" => $doc,
+                    "prefijo" => $prefijoDoc,
+                    "folio" => $folio,
+                    "cufe" => null,
+                    "estado" => "ERROR",
+                    "mensaje_error" => $res["mensaje"],
+                    "pdf_url" => null
+                ]);
                 ATEB::guardarXMLFallido("NOTA", $not, $xml);
                 SAP::change_U_Filtro_SAP($not, "2", false);
                 $log([

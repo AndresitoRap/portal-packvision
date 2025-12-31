@@ -386,7 +386,8 @@ class ATEB
                 "ok" => true,
                 "mensaje" => "Documento firmado correctamente y PDF radicado",
                 "codigo" => "OK",
-                "cufe" => $cufe
+                "cufe" => $cufe,
+                "rutaPdf" => $rutaPdf  
             ];
 
         } catch (Exception $e) {
