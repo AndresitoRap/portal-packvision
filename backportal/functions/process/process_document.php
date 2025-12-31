@@ -31,6 +31,28 @@ function writeLog(string $type, array $payload = [])
 }
 
 
+function docNumToPrefijoFolio(int $docNum): array
+{
+    // FEON → 1,000,000 – 1,999,999
+    if ($docNum >= 1000000 && $docNum < 2000000) {
+        return ["FEON", $docNum - 1000000];
+    }
+
+    // FEOC → 2,000,000 – 2,999,999
+    if ($docNum >= 2000000 && $docNum < 3000000) {
+        return ["FEOC", $docNum - 2000000];
+    }
+
+    // FEPR → 5,000,000 – 5,999,999
+    if ($docNum >= 5000000 && $docNum < 6000000) {
+        return ["FEPR", $docNum - 5000000];
+    }
+
+    // Otros (FPRA, FSRA, SALDOS, etc.)
+    return ["SALDOS", $docNum];
+}
+
+
 
 function procesarDocumentos(callable $onLog = null)
 {
@@ -152,7 +174,8 @@ function procesarDocumentos(callable $onLog = null)
             // 🔹 Nombre real del término
             $paymentTermName = $mapaPaymentTerms[$paymentGroupCode] ?? 'N/A';
 
-            $prefijoDoc = getPrefijo((string) $detalle["DocNum"]);
+            [$prefijoDoc, $folio] = docNumToPrefijoFolio((int) $detalle["DocNum"]);
+
 
             // 🔴 CASO FPRA → no se firma, se marca y se continúa
             if ($prefijoDoc === "FPRA" || $prefijoDoc === "FSRA" || $prefijoDoc === "SALDOS") {
@@ -198,14 +221,6 @@ function procesarDocumentos(callable $onLog = null)
             );
             $hco = $hcoRaw['value'][0];
 
-            $prefijo = "SETT";
-            $folio = getNextTestFolio($prefijo, 1500);
-
-            $log([
-                "type" => "log",
-                "msg" => "Usando folio de prueba {$prefijo}{$folio}"
-            ]);
-
 
             $log(["type" => "log", "msg" => "Generando XML desde SAP..."]);
             $resultado = ATEB::buildXMLFromSAP(
@@ -214,7 +229,7 @@ function procesarDocumentos(callable $onLog = null)
                 $paymentTermName,
                 "10",
                 $hco,
-                $prefijo,
+                $prefijoDoc,
                 $folio
             );
 
@@ -269,9 +284,6 @@ function procesarDocumentos(callable $onLog = null)
                 "msg" => "Detalle recibido para $not"
             ]);
 
-
-
-
             $paymentGroupCode = $detalle['PaymentGroupCode'] ?? null;
 
             // 🔹 Crear mapa: GroupNumber => Nombre
@@ -283,7 +295,8 @@ function procesarDocumentos(callable $onLog = null)
             // 🔹 Nombre real del término
             $paymentTermName = $mapaPaymentTerms[$paymentGroupCode] ?? 'N/A';
 
-            $prefijoDoc = getPrefijo((string) $detalle["DocNum"]);
+            [$prefijoDoc, $folio] = docNumToPrefijoFolio((int) $detalle["DocNum"]);
+
 
             // 🔴 CASO FPRA → no se firma, se marca y se continúa
             if ($prefijoDoc === "FPRA" || $prefijoDoc === "FSRA") {
@@ -377,14 +390,6 @@ function procesarDocumentos(callable $onLog = null)
             $usuarioCreador = $mapaUsuarios[$userSign] ?? 'N/A';
 
 
-            $prefijo = "SETT";
-            $folio = getNextTestFolio($prefijo, 1500);
-
-            $log([
-                "type" => "log",
-                "msg" => "Usando folio de prueba {$prefijo}{$folio}"
-            ]);
-
 
             $log(["type" => "log", "msg" => "Generando XML desde SAP..."]);
             $resultado = ATEB::buildXMLFromSAP(
@@ -393,7 +398,7 @@ function procesarDocumentos(callable $onLog = null)
                 $paymentTermName,
                 "20",
                 $hco,
-                $prefijo,
+                $prefijoDoc,
                 $folio
             );
 

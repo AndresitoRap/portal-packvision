@@ -61,8 +61,8 @@ class ATEB
         $referencia = "",
         $contexto = []
     ) {
-        // $url = "https://login-test.ateb.com.co:8089/cofidi4.ws.co/cofidi4.ws.co.asmx";
-        $url = "https://login-test.ateb.com.co:8089/cofidi4.ws.co/cofidi4.ws.co.asmx?WSDL";
+        // $url = "https://login-test.ateb.com.co:8089/cofidi4.ws.co/cofidi4.ws.co.asmx?WSDL";
+        $url = $_ENV['URLATEB'];
 
         // SOAP 1.1 request (lo más compatible con ATEB)
         $soapRequest = '<?xml version="1.0" encoding="utf-8"?>
@@ -112,6 +112,8 @@ class ATEB
         // PARSEO RESPUESTA SOAP
         // ============================
         try {
+
+            error_log("este es el response del response".$response);
             $xmlResponse = simplexml_load_string($response);
             $namespaces = $xmlResponse->getNamespaces(true);
 
@@ -405,15 +407,14 @@ class ATEB
         $paymentTermName,
         $tipoOperacion,
         $hco,
-        //eliminar en produccion
         $prefijo,
-        $folio
+        $folio,
     ) {
+        $prefijo_original = $prefijo;
+        $folio_original = $folio;
         $baseEntry = null;
         $cufeFactura = null;
         $warningNC = null;
-        $prefijo_original = $prefijo;
-        $folio_original = $folio;
 
 
         if ($tipoOperacion == "20") {
@@ -486,12 +487,12 @@ class ATEB
         }
 
         $iva = $totalmontoconiva;
-
+        $sapDocNum = (int) $detalle['DocNum'];
+        [$prefijo, $folio] = self::sapFolioToPrefijoFolio($sapDocNum);
 
 
         $E01 = $xml->addChild("E01");
         $E01->addAttribute("FolioInterno", $prefijo . $folio);
-        $fecha = '2025-12-30';
         $E01->addAttribute("Fecha", "$fecha $horaActual");
         $E01->addAttribute("TipoDeComprobante", $tipoOperacion == "20" ? '02' : '01');
         $E01->addAttribute("Moneda", "COP");
@@ -520,7 +521,7 @@ class ATEB
         $E01->addAttribute("tipoOperacion", $tipoOperacion);
         $E01->addAttribute("DiasVencimiento", $diasVenc);
 
-        // list($nit, $dv) = explode("-", $bussinesPartner['FederalTaxID']);
+        $cliente = $bussinesPartner['CardCode'];
         $nit = $hco['Code'];
         $dv = $hco['U_AuthDig'];
         $E02 = $xml->addChild("E02");
@@ -553,8 +554,8 @@ class ATEB
         $EBC->addAttribute("Tipo", "E");
         $EBC->addAttribute("Name", $hco["Name"]);
         $EBC->addAttribute("Telephone", $bussinesPartner["Phone1"]);
-        $EBC->addAttribute("Mail", "sistemas@empaquespackvision.com");
-        // $EBC->addAttribute("Mail", $bussinesPartner["EmailAddress"]);
+        // $EBC->addAttribute("Mail", "sistemas@empaquespackvision.com");
+        $EBC->addAttribute("Mail", $bussinesPartner["EmailAddress"]);
 
         if ($tipoOperacion == "20") {
             $EDR = $xml->addChild("EDR");
@@ -879,7 +880,7 @@ class ATEB
             $mapU[$u['InternalKey']] = $u['UserName'];
         }
         $usuarioCreador = $mapU[$detalle['UserSign']] ?? 'N/A';
-        $contexto = ["docNum" => $detalle["DocNum"], "detalle" => $detalle, "tipoOperacion" => $isInvoice ? "10" : "20", "bussinesPartner" => $bussinesPartner, "hco" => $hco, "prefijo" => $prefijo, "folio" => $folio, "payment_term_name" => $paymentTermName, "fechaVenc" => substr($detalle["DocDueDate"], 0, 10), "subtotal" => $detalle["BaseAmount"], "iva" => $detalle["VatSum"], "totalIVA" => $detalle["VatSum"], "vendedor" => $vendedor, "usuario_creador" => $usuarioCreador, "moneda" =>$detalle['DocCurrency']];
+        $contexto = ["docNum" => $detalle["DocNum"], "detalle" => $detalle, "tipoOperacion" => $isInvoice ? "10" : "20", "bussinesPartner" => $bussinesPartner, "hco" => $hco, "prefijo" => $prefijo, "folio" => $folio, "payment_term_name" => $paymentTermName, "fechaVenc" => substr($detalle["DocDueDate"], 0, 10), "subtotal" => $detalle["BaseAmount"], "iva" => $detalle["VatSum"], "totalIVA" => $detalle["VatSum"], "vendedor" => $vendedor, "usuario_creador" => $usuarioCreador, "moneda" => $detalle['DocCurrency']];
 
         return self::generarCFD($_ENV['ENTERPRISE'], $_ENV['USERATEB'], $_ENV['PASSWORDATEB'], $xml, "02", "", $contexto);
     }
@@ -916,7 +917,7 @@ class ATEB
             ];
         }
 
-        $url = "https://login-test.ateb.com.co:8089/cofidi4.ws.co/cofidi4.ws.co.asmx?WSDL";
+        $url = $_ENV['URLATEB'];
 
         $pdfBase64 = base64_encode(file_get_contents($rutaPdf));
         $anio = (int) date('Y');

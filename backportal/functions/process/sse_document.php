@@ -1,5 +1,6 @@
 <?php
-require "process_documents.php";
+require __DIR__ . "/process_document.php";
+
 
 header("Content-Type: text/event-stream");
 header("Cache-Control: no-cache");
