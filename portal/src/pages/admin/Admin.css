@@ -1,0 +1,490 @@
+/* Admin.css */
+
+/* Sección inicial con logo y título */
+.start {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.start img {
+  height: 60px;
+}
+
+.start h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0;
+}
+.Body {
+  display: flex;
+  gap: 2rem;
+  padding-left: 6vw;
+  padding-top: 2vh;
+  padding-bottom: 3vh;
+}
+
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 70vh; /* Ajusta según tu diseño */
+}
+
+.panel-half {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.panel-half h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.item {
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border-radius: 0.35rem;
+  transition: background-color 0.4s ease, transform 0.2s ease;
+}
+
+/* 🟡 pendiente */
+.item.pending {
+  background-color: #ffffff;
+}
+
+/* 🟢 éxito */
+.item.success {
+  background-color: #e6f9ed;
+  border-left: 6px solid #2ecc71;
+  animation: successPulse 0.6s ease;
+}
+
+/* 🔴 error */
+.item.error {
+  background-color: #fdeaea;
+  border-left: 6px solid #e74c3c;
+  animation: errorShake 0.4s ease;
+}
+
+.item.clickable {
+  cursor: pointer;
+}
+
+.item.clickable:hover {
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.25);
+}
+
+/* Animaciones */
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes errorShake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Panel de logs */
+/* Panel de logs */
+.logs {
+  flex: 2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-right: 2rem;
+  height: 70vh;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 🔑 evita doble scroll */
+}
+
+/* Header fijo */
+.logs-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f9f9f9;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.logs-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Icono */
+.tooltip {
+  position: relative;
+  cursor: help;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Caja tooltip */
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: #fff;
+  font-weight: 500;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  width: 20rem;
+  white-space: wrap;
+  pointer-events: none;
+
+  /* efecto glass */
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Flechita apuntando ARRIBA */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;           /* ⬅️ flecha arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent var(--primary-color);
+}
+
+/* Hover */
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+.logs-body {
+  flex: 1; /* 🔑 ocupa el espacio restante */
+  overflow-y: auto; /* 🔑 activa el scroll */
+  padding: 1rem 0;
+}
+
+/* Contenedor de lista */
+.log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Item individual */
+.log-item {
+  background-color: #ffffff;
+  border: 1px solid #e2e2e2;
+  border-left: 4px solid #b5b5b5;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-inline: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+/* Hover */
+.log-item:hover {
+  background-color: #f3f6fa;
+  transform: translateX(2px);
+}
+
+/* Texto */
+.log-text {
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+/* Estado vacío */
+.log-empty {
+  color: #777;
+  font-style: italic;
+  padding: 1rem;
+}
+
+.log-success {
+  border-left-color: #2ecc71;
+  background-color: #eafaf1;
+}
+
+.log-error {
+  border-left-color: #e74c3c;
+  background-color: #fdecea;
+}
+
+.log-info {
+  border-left-color: #3498db;
+}
+
+.fix-doc-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 0px 6vw;
+}
+
+.fix-doc-panel {
+  flex: 1;
+  min-width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.fix-doc-panel h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.fix-doc-panel form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.fix-doc-panel input[type="number"] {
+  padding: 0.5rem;
+  width: 120px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.fix-doc-panel button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.fix-doc-panel button:hover {
+  background-color: #0056b3;
+}
+
+.fix-doc-panel .status-msg {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: green;
+}
+
+.title-xml {
+  font-size: 2rem;
+  padding: 2rem 1rem;
+}
+
+/* Contenedor del botón */
+.button-wrapper {
+  display: flex;
+  justify-content: flex-end; /* 👉 lo manda a la derecha */
+  padding: 1rem;
+}
+
+/* Botón */
+.btn-primary {
+  background-color: #015081;
+  color: white;
+  font-size: 1rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 1rem;
+  border: none;
+  cursor: pointer;
+
+  /* Sombra inicial */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+
+  /* Animaciones suaves */
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+/* Hover: elevación */
+.btn-primary:hover {
+  transform: translateY(-4px); /* 👆 se eleva */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+  background-color: #0266a0;
+}
+
+/* Click (feedback táctil) */
+.btn-primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+.edit-xml {
+  padding: 2rem 6vw;
+}
+
+.xml-info {
+  background: #f3f6fa;
+  border-left: 4px solid #3498db;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.title-xml {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.container-with-xml {
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: #fafafa;
+  min-height: 120px;
+}
+
+.selected-doc p {
+  margin: 0.4rem 0;
+}
+
+.hint {
+  color: #777;
+  font-style: italic;
+}
+
+.button-wrapper {
+  margin-top: 1.5rem;
+}
+
+
+
+/* Contenedor del área protegida */
+.protected-area {
+  position: relative; /* 🔑 clave */
+}
+
+/* Overlay SOLO para esta área */
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+
+  /* Glass effect */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+
+  /* Opcional: leve tinte */
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Modal */
+.auth-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.auth-modal input {
+  width: 100%;
+  padding: 0.7rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+
+.refirmando-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refirmando-modal {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.refirmando-modal h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.refirmando-modal p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Spinner */
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #1e88e5;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,365 @@
+@font-face {
+  font-family: "DIN";
+  src: url("assets/fonts/D-DINExp.ttf") format("truetype");
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%; /* importante para que flex funcione */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "DIN", sans-serif;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 12px;
+}
+
+.row-enterprise {
+  display: table; /* Contenedor como tabla */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.row-enterprise .logo {
+  display: table-cell;
+  width: 240px;
+  vertical-align: top; /* Alinea al top */
+  padding-right: 15px; /* Separación del texto */
+}
+
+.row-enterprise .info-enterprise {
+  display: table-cell;
+  vertical-align: top; /* Alinea al top */
+  font-size: 12px;
+  height: min-content;
+  color: #000;
+}
+
+.row-enterprise .titles {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.titles {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.container-info-client {
+  display: table; /* Contenedor como tabla */
+  width: 100%;
+  border: 1px solid #676767;
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
+}
+
+.column-info-client {
+  display: table-cell; /* Cada columna como celda */
+  vertical-align: top; /* Alinea contenido arriba */
+  padding: 15px; /* Espaciado interno */
+  font-size: 12px;
+  color: #000;
+  border-right: 1px solid #676767;
+  height: min-content;
+}
+.info-document-cliente table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.info-document-cliente table td {
+  width: 50%;
+  padding: 1px 0;
+  border-top: 1px solid #676767; /* borde superior */
+  border-bottom: 1px solid #676767; /* borde inferior */
+  height: min-content;
+}
+
+/* Línea vertical en la mitad: aplicar solo a la primera celda de cada fila */
+.info-document-cliente table tr td:first-child {
+  border-right: 1px solid #676767;
+}
+
+/* Primera fila sin borde */
+.info-document-cliente table tr.no-border td {
+  border: none;
+}
+
+/* Última fila sin borde inferior */
+.info-document-cliente table tr:last-child td {
+  border-bottom: none;
+}
+
+/*PRODUCTOS*/
+.container-items table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.container-items th,
+.container-items td {
+  border: 1px solid #676767;
+  text-align: center;
+  height: min-content;
+
+}
+
+.container-items th {
+  background-color: #004f9e;
+  color: #fff;
+  font-weight: 500;
+  height: min-content;
+}
+
+.container-items td {
+  text-align: center;
+}
+
+/* Ajuste de anchos */
+.container-items th.ref,
+.container-items td.ref {
+  width: 10%; /* Referencia ocupa poco */
+}
+
+.container-items th.descripcion,
+.container-items td.descripcion {
+  font-size: 12px;
+  width: 0%; /* Descripción ocupa más espacio */
+}
+
+.container-items th.cantidad,
+.container-items td.cantidad {
+  width: 10%;
+}
+
+.container-items th.valor-unitario,
+.container-items td.valor-unitario {
+  width: 12%;
+}
+
+.container-items th.valor-total,
+.container-items td.valor-total {
+  width: 12%;
+}
+
+/*OBSERVACIONES*/
+.comments {
+  text-align: center;
+  border-right: 1px solid #676767;
+  border-left: 1px solid #676767;
+}
+.comments-header {
+  color: white;
+  background-color: #004f9e;
+  padding-bottom: 1px;
+  height: min-content;
+}
+.comment {
+  color: black;
+  padding: 2px 6px;
+  height: min-content;
+}
+
+/*TOTALES*/
+.total-document {
+  display: table; /* Contenedor como tabla */
+  width: 100%;
+  border: 1px solid #676767;
+}
+
+.numbersontext {
+  display: table-cell; /* Cada columna como celda */
+  vertical-align: middle; /* Alinea contenido arriba */
+  padding: 15px; /* Espaciado interno */
+  font-size: 12px;
+  width: 50%;
+  color: #000;
+  border-right: 1px solid #676767;
+  height: min-content;
+}
+.totales table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.totales table td {
+  padding: 1px 0;
+  border-top: 1px solid #676767; /* borde superior */
+  border-bottom: 1px solid #676767; /* borde inferior */
+  height: min-content;
+}
+
+/* Línea vertical en la mitad: aplicar solo a la primera celda de cada fila */
+.totales table tr td:first-child {
+  border-right: 1px solid #676767;
+}
+
+/* Primera fila sin borde */
+.totales table tr.no-border td {
+  border: none; /* Eliminamos todos los bordes */
+}
+
+/* Solo borde vertical en la primera celda */
+.totales table tr.no-border td:first-child {
+  border-right: 1px solid #676767; /* Línea entre SUBTOTAL y el valor */
+  text-align: center; /* Opcional: alinear texto a la derecha */
+}
+˝
+
+/* Última fila sin borde inferior */
+.totales table tr:last-child td {
+  border-bottom: none;
+}
+
+.resolucion {
+  text-align: center;
+  border-left: 1px solid #676767;
+  border-right: 1px solid #676767;
+  border-bottom: 1px solid #676767;
+}
+
+.cufe {
+  display: table;
+  width: 100%;
+  border-left: 1px solid #676767;
+  border-right: 1px solid #676767;
+  border-bottom: 1px solid #676767;
+  table-layout: fixed; /* Para que la segunda celda se expanda */
+}
+
+.cufe p {
+  text-align: center;
+  display: table-cell;
+  padding: 2px 4px;
+  height: min-content;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.cufe p:first-child {
+  width: 8%; /* Lo más pequeño posible */
+  font-weight: bold;
+  border-right: 1px solid #676767; /* Línea vertical */
+}
+
+.cufe p:last-child {
+  width: 99%; /* Se expande */
+  font-size: 12px;
+  word-break: break-all; /* Para que el código largo haga wrap */
+}
+
+.qr-container {
+  display: table;
+  width: 100%;
+  border-left: 1px solid #676767;
+  border-right: 1px solid #676767;
+  border-bottom: 1px solid #676767;
+  table-layout: auto;
+}
+
+.qr-container .qr-cell {
+  display: table-cell;
+  width: 130px; /* Ancho fijo de la celda que contiene el QR */
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.qr-container .qr {
+  width: 120px; /* Cuadrado fijo */
+  height: 120px; /* Cuadrado fijo */
+}
+
+.qr-container .text-cell {
+  display: table-cell;
+  padding: 5px 10px;
+  vertical-align: middle;
+  text-align: justify;
+  height: min-content;
+  width: auto; /* Se expande para ocupar todo lo que sobra */
+}
+
+.assignatures-container {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-bottom: 1px solid #676767;
+  border-left: 1px solid #676767;
+  border-right: 1px solid #676767;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  margin-bottom: 5px;
+}
+
+.assignatures-container .signature-box {
+  display: table-cell;
+  width: 50%;
+  height: 80px; /* Altura del contenedor */
+  vertical-align: top;
+  padding: 5px;
+  text-align: center;
+}
+
+/* Raya del medio */
+.assignatures-container .signature-box:first-child {
+  border-right: 1px solid #676767;
+}
+
+.assignatures-container .signature-box .title {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.assignatures-container .signature-box .details {
+  font-size: 10px;
+  text-align: left;
+  margin-top: 26px; 
+}
+
+.assignatures-footer {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  font-size: 10px;
+}
+
+.assignatures-footer .footer-cell {
+  display: table-cell;
+  width: 50%;
+  padding: 6px 8px;
+  vertical-align: middle;
+}
+
+.assignatures-footer .footer-cell.left {
+  text-align: left;
+}
+
+.assignatures-footer .footer-cell.right {
+  text-align: right;
+}
+
+
+
+
+footer {
+  text-align: center;
+  font-size: 10px;
+  color: #989898;
+  padding: 10px 0;
+  height: min-content;
+}

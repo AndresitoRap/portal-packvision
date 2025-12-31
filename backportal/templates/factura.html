@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="factura.css" />
+  </head>
+
+  <body>
+    <div class="row-enterprise">
+      <img src="/assets/img/BLogo.png" class="logo" />
+
+      <div class="info-enterprise">
+        <p class="titles">PACKVISIÓN SAS</p>
+        <p>NIT: 900277192-1</p>
+        <p>Regimen Común</p>
+        <p>Tarifa ICA Mosquera 7*1000 - Tarifa ICA Bogotá 11.04/1000</p>
+        <p>Actividad Económica CIIU 2521</p>
+        <p>No Somos Autorretenedores</p>
+        <p>No Somos Grandes Contribuyentes</p>
+      </div>
+    </div>
+
+    <!-- <div class="content">{{CONTENT}}</div> -->
+    <div class="content">
+      <div class="container-info-client">
+        <!-- Columna izquierda: Datos Cliente -->
+        <div class="column-info-client">
+          <p class="titles"><strong>Datos Clientes</strong></p>
+          <p><strong>Nombre:</strong>{{NOMBRE_CLIENTE}}</p>
+          <p><strong>N.I.T:</strong>{{IDENTIFICACION}}</p>
+          <p><strong>Dirección:</strong>{{DIRECCION}}</p>
+          <p><strong>Teléfono:</strong>{{TELEFONO}}</p>
+          <p><strong>Correo:</strong>{{CORREO}}</p>
+        </div>
+
+        <!-- Columna derecha: Informacion -->
+        <div class="info-document-cliente">
+          <table>
+            <!-- Fila sin bordes -->
+            <tr class="no-border">
+              <td class="titles">
+                <strong style="padding-bottom: 6px"
+                  >{{DOCUMENTO}} ELECTRÓNICA DE VENTA</strong
+                >
+              </td>
+              <td class="titles"><strong>{{FACTURA}}</strong></td>
+            </tr>
+
+            <!-- Filas con línea vertical y bordes -->
+            <tr>
+              <td><strong>Fecha de Emisión</strong></td>
+              <td><strong>Fecha de Vencimiento</strong></td>
+            </tr>
+            <tr>
+              <td>{{FECHA_DE_EMISION}}</td>
+              <td>{{FECHA_DE_VENCIMIENTO}}</td>
+            </tr>
+            <tr>
+              <td><strong>Pedido No.</strong></td>
+              <td><strong>{{ORDEN_DE_VENTA}}</strong></td>
+            </tr>
+            <tr>
+              <td>Condiciones de pago:</td>
+              <td>Despachado por:</td>
+            </tr>
+            <tr>
+              <td><strong>{{CONDICION_DE_PAGO}}</strong></td>
+              <td>{{DESPACHADOR}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="container-items">
+        <table>
+          <thead>
+            <tr>
+              <th class="ref">Ref</th>
+              <th class="descripcion">Descripción</th>
+              <th class="cantidad">Cantidad</th>
+              <th class="valor-unitario">Valor Unitario</th>
+              <th class="valor-total">Valor Total</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {{ITEMS}}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="comments">
+        <p class="comments-header"><strong>Comentarios</strong></p>
+        <p class="comment">{{COMENTARIOS}}</p>
+      </div>
+    </div>
+    <div class="total-document">
+      <!-- Columna izquierda: Datos Cliente -->
+      <div class="numbersontext">
+        <p style="font-size: 15px; padding-bottom: 3px; padding-top: 3px">
+          <strong>VALOR TOTAL DE LA FACTURA EN LETRAS:</strong>
+        </p>
+        <p>{{VALOR_TOTAL_EN_LETRAS}}</p>
+        <p style="font-size: 15px; padding-bottom: 3px; padding-top: 3px">
+          <strong>VALOR NETO A PAGAR EN LETRAS:</strong>
+        </p>
+        <p>{{VALOR_NETO_EN_LETRAS}}</p>
+      </div>
+
+      <!-- Columna derecha: Nota de Crédito -->
+      <div class="totales">
+        <table>
+          <!-- Fila sin bordes -->
+          <tr class="no-border">
+            <td style="color: red">SUBTOTAL</td>
+            <td>{{SUBTOTAL}}</td>
+          </tr>
+
+          <!-- Filas con línea vertical y bordes -->
+          <tr>
+            <td>Descuentos</td>
+            <td>0.00</td>
+          </tr>
+          <tr>
+            <td>IVA 19%</td>
+            <td>{{IVA}}</td>
+          </tr>
+          <tr>
+            <td>RETENCIÓN EN LA FUENTE</td>
+            <td>{{RETEFUENTE}}</td>
+          </tr>
+          <tr>
+            <td>RETENCIÓN IVA</td>
+            <td>{{RETEIVA}}</td>
+          </tr>
+          <tr>
+            <td>RETENCIÓN ICA</td>
+            <td>{{RETEICA}}</td>
+          </tr>
+          <tr>
+            <td>ANTICIPO</td>
+            <td>0.00</td>
+          </tr>
+          <tr class="no-border">
+            <td style="color: #004f9e"><strong>NETO A PAGAR</strong></td>
+            <td>{{NETO_A_PAGAR}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="resolucion">
+      <p>
+        Resolución Facturacion Electronica De Venta DIAN No. {{RESOLUCION}} de
+        fecha {{FECHA_FOLIO}}, numeración Habilitación del No. {{PREFIJO}}
+        {{FOLIO_INICIAL}} al {{PREFIJO}} {{FOLIO_FINAL}} Vigencia {{VIGENCIA}}
+        Meses - Proveedor tecnologico ATEB COLOMBIA SAS NIT 900965992 - 7
+      </p>
+    </div>
+    <div class="cufe">
+      <p>CUFE:</p>
+      <p>{{CUFE}}</p>
+    </div>
+    <div class="qr-container">
+      <div class="qr-cell">
+        <img src="{{QR}}" class="qr" />
+      </div>
+      <div class="text-cell">
+        * Se deja constancia que el comprador aceptó expresamente el contenido
+        de esta factura y da constancia que recibe real y materialmente la
+        totalidad de las mercancias y servicios a plena satisfacción. El
+        comprador se hace responsable del pago de la presente factura y acepta
+        que quienes firman, tienen autorización para hacerlo por lo tanto son
+        sus representantes. Después del vencimiento se cobrará intereses de mora
+        según lo fijado por la Superfinanciera. CONSIGNAR EN LA CUENTA CORRIENTE
+        No. 007569998813 BANCO DAVIVIENDA O CUENTA CORRIENTE BANCOLOMBIA No.
+        10813034166 A NOMBRE DE PACKVISION S.A.S. *
+      </div>
+    </div>
+    <div class="assignatures-container">
+      <!-- Contenedor izquierdo -->
+      <div class="signature-box">
+        <div class="title">FIRMA AUTORIZADA</div>
+      </div>
+
+      <!-- Contenedor derecho -->
+      <div class="signature-box">
+        <div class="title">FIRMA RECIBIDO</div>
+        <div class="details">
+          Fecha:<br />
+          Nombre:<br />
+          C.C.:
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila inferior: Vendedor / Temani -->
+    <div class="assignatures-footer">
+      <div class="footer-cell left">{{USUARIO_CREADOR}}</div>
+      <div class="footer-cell right">VENDEDOR: {{VENDEDOR}}</div>
+    </div>
+
+
+    <footer>
+      <p>
+        Sede Carvajal: Cr. 69a #36-14 Sur, Bogotá, Colombia / Sede Norte: Cr. 77
+        #9-40, Oficina 101, Nogal, Bogotá, Colombia / Sede Mosquera: Cr. 1
+        #3-52, Bodega 3, Parque Industrial Tecplas, Barrio El Lucero, Mosquera,
+        Cundinamarca<br />
+        WhatsApp: 317 868 91 25, PBX (601) 746 05 33 <br />
+        Bogotá D.C. Colombia. Email: gerencia@empaquespackvision.com <br />
+        www.empaquespackvision.com
+      </p>
+    </footer>
+  </body>
+</html>

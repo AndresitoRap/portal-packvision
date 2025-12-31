@@ -1,0 +1,56 @@
+/* src/index.css o src/styles/globals.css (el que importes en main.tsx) */
+
+* {
+    margin: 0;            /* mejor que padding: 0; solo, así reseteas ambos */
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'D-DIN Exp';
+    src: url('./assets/fonts/D-DINExp.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* Recomendado: carga rápida y evita FOIT */
+}
+
+@font-face {
+    font-family: 'D-DIN Exp';
+    src: url('./assets/fonts/D-DINExp-Bold.ttf') format('truetype');
+    font-weight: bold;   /* o 700 si prefieres ser más específico */
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ====================== VARIABLES GLOBALES ====================== */
+:root {
+    /* Colores primarios */
+    --primary-color: #004F9E;        
+    --secondary-color: #3EB7EA;
+    --tertiary-color: #015081;
+    --cuartiary-color: #052344;
+
+    /* Colores secundarios / neutros (puedes agregar más) */
+    --background-color: #f9fafb;      /* Fondo general (gray-50) */
+    --surface-color: #ffffff;         /* Tarjetas, modales, etc. */
+    --text-primary: #111827;          /* Texto principal (gray-900) */
+    --text-secondary: #6b7280;        /* Texto secundario (gray-500) */
+    --error-color: #ef4444;           /* Rojo para errores */
+
+    --font-primary: 'D-DIN Exp', system-ui, -apple-system, sans-serif;
+
+}
+
+/* ====================== ESTILOS BASE ====================== */
+html {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #f9fafb;
+}

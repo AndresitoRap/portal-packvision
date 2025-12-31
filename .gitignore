@@ -1,0 +1,19 @@
+# General
+.DS_Store
+.env
+.env.*
+*.log
+
+# Frontend (Vite / Tauri)
+frontend/node_modules/
+frontend/dist/
+frontend/src-tauri/target/
+frontend/src-tauri/gen/
+
+# Backend (PHP / Node / Laravel / etc)
+backend/vendor/
+backend/node_modules/
+backend/storage/logs/
+backend/storage/framework/
+backend/.env
+
