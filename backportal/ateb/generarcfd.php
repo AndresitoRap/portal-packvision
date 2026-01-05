@@ -113,7 +113,7 @@ class ATEB
         // ============================
         try {
 
-            error_log("este es el response del response".$response);
+            // error_log("este es el response del response".$response);
             $xmlResponse = simplexml_load_string($response);
             $namespaces = $xmlResponse->getNamespaces(true);
 
