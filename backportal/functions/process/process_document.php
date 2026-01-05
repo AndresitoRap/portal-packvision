@@ -264,6 +264,7 @@ function procesarDocumentos(callable $onLog = null)
                 guardarResultadoEnCpanel([
                     "tipo" => "FACTURA",
                     "docEntry" => $doc,
+                    "docNum" => (int) $detalle["DocNum"],
                     "prefijo" => $prefijoDoc,
                     "folio" => $folio,
                     "cufe" => $res["cufe"] ?? null,
@@ -286,6 +287,7 @@ function procesarDocumentos(callable $onLog = null)
                 guardarResultadoEnCpanel([
                     "tipo" => "FACTURA",
                     "docEntry" => $doc,
+                    "docNum" => (int) $detalle["DocNum"],
                     "prefijo" => $prefijoDoc,
                     "folio" => $folio,
                     "cufe" => null,
@@ -464,6 +466,7 @@ function procesarDocumentos(callable $onLog = null)
                 guardarResultadoEnCpanel([
                     "tipo" => "NOTA",
                     "docEntry" => $doc,
+                    "docNum" => (int) $detalle["DocNum"],
                     "prefijo" => $prefijoDoc,
                     "folio" => $folio,
                     "cufe" => $res["cufe"] ?? null,
@@ -483,6 +486,8 @@ function procesarDocumentos(callable $onLog = null)
                 guardarResultadoEnCpanel([
                     "tipo" => "NOTA",
                     "docEntry" => $doc,
+                    "docNum" => (int) $detalle["DocNum"],
+
                     "prefijo" => $prefijoDoc,
                     "folio" => $folio,
                     "cufe" => null,
