@@ -21,14 +21,13 @@ function Facturacion() {
   const [searchNota, setSearchNota] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedFactura, setSelectedFactura] = useState<any>(null);
   const [loadingFactura, setLoadingFactura] = useState(false);
   const [errorFactura, setErrorFactura] = useState<string | null>(null);
 
   const [selectedDocumento, setSelectedDocumento] = useState<any>(null);
-  const [tipoDocumento, setTipoDocumento] = useState<"factura" | "nota" | null>(
-    null
-  );
+  // const [tipoDocumento, setTipoDocumento] = useState<"factura" | "nota" | null>(
+  //   null
+  // );
 
   const openDocumentoModal = async (
     tipo: "factura" | "nota",
@@ -39,7 +38,7 @@ function Facturacion() {
     setErrorFactura(null);
     setSelectedDocumento(null);
     setModalOpen(true);
-    setTipoDocumento(tipo);
+    // setTipoDocumento(tipo);
 
     try {
       const sapFolio =

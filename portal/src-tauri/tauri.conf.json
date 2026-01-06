@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Portal Packvisión® SAS",
+    "productName": "Portal Packvision SAS",
     "version": "1.0.0"
   },
   "tauri": {
@@ -24,8 +24,7 @@
         "width": 1000,
         "minWidth": 1000,
         "height": 700,
-        "minHeight": 700,
-        "fullscreen": true,    
+        "minHeight": 700,  
         "maximized": true
         
       }

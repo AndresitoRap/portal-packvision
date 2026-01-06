@@ -4,7 +4,6 @@ import PageTransition from "../../components/page-transition";
 import Toast from "../../components/Toast/toast";
 import "./Admin.css";
 import CambiarEstadoFactura from "../../components/change_state_button";
-import { useRef } from "react";
 const API_URL = import.meta.env.VITE_API_URL;
 const LAST_TOAST_KEY = "admin_last_toast_time";
 
@@ -35,9 +34,7 @@ function Admin() {
   const [selectedNota] = useState<Nota | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [statusMsgFactura] = useState("");
-  const [statusMsgNota] = useState("");
-  const shownErrorsRef = useRef<Set<string>>(new Set());
-  const shownSuccessRef = useRef<Set<string>>(new Set());
+  const [statusMsgNota] = useState(""); 
   const [xmlContenido, setXmlContenido] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
