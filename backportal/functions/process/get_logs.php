@@ -1,19 +1,38 @@
 <?php
+require_once __DIR__ . "/../../db/connection.php";
+
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
 
-$logFile = __DIR__ . "/../../storage/logs/firma_documentos.log";
+try {
+    $pdo = Connection::connect();
 
-if (!file_exists($logFile)) {
-    echo json_encode([]);
-    exit;
+    $stmt = $pdo->prepare("
+        SELECT
+            DATE_FORMAT(creado_en, '%Y-%m-%d %H:%i:%s') AS time,
+            tipo AS type,
+            payload
+        FROM ateb_logs
+        ORDER BY creado_en DESC
+        LIMIT 200
+    ");
+
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $logs = array_map(function ($row) {
+        return [
+            "time" => $row["time"],
+            "type" => $row["type"],
+            "payload" => json_decode($row["payload"], true)
+        ];
+    }, array_reverse($rows)); // cronológico
+
+    echo json_encode($logs, JSON_UNESCAPED_UNICODE);
+
+} catch (Throwable $e) {
+    http_response_code(500);
+    echo json_encode([
+        "ok" => false,
+        "msg" => $e->getMessage()
+    ]);
 }
-
-$lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-// últimos 100 eventos
-$lines = array_slice($lines, -200);
-
-$data = array_map(fn($l) => json_decode($l, true), $lines);
-
-echo json_encode($data);

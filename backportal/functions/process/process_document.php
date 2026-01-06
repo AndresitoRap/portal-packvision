@@ -5,31 +5,32 @@ require __DIR__ . "/../../vendor/autoload.php";
 require __DIR__ . "/../../ateb/helpers_test.php";
 require __DIR__ . "/helper_document_cpanel.php";
 require __DIR__ . "/helpers.php";
+require __DIR__ . "/logger.php";
 
 use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__ . "/../..");
 $dotenv->load();
 
 
-function writeLog(string $type, array $payload = [])
-{
-    $logFile = __DIR__ . "/../../storage/logs/firma_documentos.log";
+// function writeLog(string $type, array $payload = [])
+// {
+//     $logFile = __DIR__ . "/../../storage/logs/firma_documentos.log";
 
-    // asegura carpeta
-    @mkdir(dirname($logFile), 0775, true);
+//     // asegura carpeta
+//     @mkdir(dirname($logFile), 0775, true);
 
-    $entry = [
-        "time" => date("Y-m-d H:i:s"),
-        "type" => $type,
-        "payload" => $payload
-    ];
+//     $entry = [
+//         "time" => date("Y-m-d H:i:s"),
+//         "type" => $type,
+//         "payload" => $payload
+//     ];
 
-    file_put_contents(
-        $logFile,
-        json_encode($entry, JSON_UNESCAPED_UNICODE) . PHP_EOL,
-        FILE_APPEND | LOCK_EX
-    );
-}
+//     file_put_contents(
+//         $logFile,
+//         json_encode($entry, JSON_UNESCAPED_UNICODE) . PHP_EOL,
+//         FILE_APPEND | LOCK_EX
+//     );
+// }
 
 
 function docNumToPrefijoFolio(int $docNum): array
@@ -487,7 +488,6 @@ function procesarDocumentos(callable $onLog = null)
                     "tipo" => "NOTA",
                     "docEntry" => $doc,
                     "docNum" => (int) $detalle["DocNum"],
-
                     "prefijo" => $prefijoDoc,
                     "folio" => $folio,
                     "cufe" => null,

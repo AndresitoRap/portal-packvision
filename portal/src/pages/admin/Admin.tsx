@@ -105,8 +105,15 @@ function Admin() {
 
     const loadLogs = async () => {
       try {
-        const res = await fetch(`${API_URL}/functions/process/get_logs.php`);
+        const res = await fetch(`${API_URL}/functions/process/get_logs.php`);   
         const data = await res.json();
+
+        if (!data.ok) return;
+
+// 🔥 ESTE ES EL PUNTO CLAVE
+const orderedLogs = [...data.logs].sort(
+  (a, b) => a.id - b.id
+);
 
         // Logs de texto (panel derecho)
         const textLogs: string[] = [];
@@ -114,7 +121,7 @@ function Admin() {
         const facturas: Factura[] = [];
         const notas: Nota[] = [];
 
-        for (const l of data) {
+        for (const l of orderedLogs) {
           const time = l.time;
           const type = l.type;
           const payload = l.payload || {};
@@ -329,7 +336,7 @@ function Admin() {
 
           <div className="logs-body">
             {logs.length === 0 ? (
-              <div className="log-empty">No hay logs</div>
+              <div className="log-empty">No hay historial de movimientos</div>
             ) : (
               <div className="log-list">
                 {logs.map((log, idx) => (
