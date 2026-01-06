@@ -135,6 +135,7 @@ function Facturacion() {
 
   return (
     <PageTransition>
+      <div className="page-wrapper">
       <a className="volver" href="/">
         Volver
       </a>
@@ -246,12 +247,19 @@ function Facturacion() {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="footer-line"></div>
-        <p className="footer-text">
-          Packvisión® SAS 2025. Todos los derechos reservados
-        </p>
-      </footer>
+       <footer className="footer">
+          <div className="footer-line"></div>
+
+          <div className="footer-content">
+            <p className="footer-text">
+              Packvisión® SAS 2025. Todos los derechos reservados
+            </p>
+
+            <span className="footer-version">
+              v1.0.0
+            </span>
+          </div>
+        </footer>
 
       {modalOpen && (
         <div className="modal">
@@ -324,6 +332,7 @@ function Facturacion() {
           </div>
         </div>
       )}
+      </div>
     </PageTransition>
   );
 }

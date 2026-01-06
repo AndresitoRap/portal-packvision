@@ -511,11 +511,18 @@ const orderedLogs = [...data.logs].sort(
       </section>
 
       <footer className="footer">
-        <div className="footer-line"></div>
-        <p className="footer-text">
-          Packvisión® SAS 2025. Todos los derechos reservados
-        </p>
-      </footer>
+          <div className="footer-line"></div>
+
+          <div className="footer-content">
+            <p className="footer-text">
+              Packvisión® SAS 2025. Todos los derechos reservados
+            </p>
+
+            <span className="footer-version">
+              v1.0.0
+            </span>
+          </div>
+        </footer>
 
       {isRefirmando && (
         <div className="refirmando-overlay">
