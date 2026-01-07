@@ -284,27 +284,14 @@ function procesarDocumentos(callable $onLog = null)
                 ]);
 
             } else {
-
-                guardarResultadoEnCpanel([
-                    "tipo" => "FACTURA",
-                    "docEntry" => $doc,
-                    "docNum" => (int) $detalle["DocNum"],
-                    "prefijo" => $prefijoDoc,
-                    "folio" => $folio,
-                    "cufe" => null,
-                    "estado" => "ERROR",
-                    "mensaje_error" => $res["mensaje"],
-                    "pdf_url" => null
-                ]);
-                ATEB::guardarXMLFallido("FACTURA", $doc, $xml);
-                SAP::change_U_Filtro_SAP($doc, "2", true);
                 $log([
                     "type" => "error",
                     "docType" => "FACTURA",
                     "DocEntry" => $doc,
                     "msg" => "❌ Error al firmar factura: " . $res["mensaje"]
                 ]);
-
+                ATEB::guardarXMLFallido("FACTURA", $doc, $xml);
+                SAP::change_U_Filtro_SAP($doc, "2", true);
             }
 
         }
@@ -484,6 +471,14 @@ function procesarDocumentos(callable $onLog = null)
                     "msg" => "Nota crédito firmada correctamente"
                 ]);
             } else {
+                $log([
+                    "type" => "error",
+                    "docType" => "NOTA",
+                    "DocEntry" => $not,
+                    "msg" => "❌ Error al firmar nota crédito: " . $res["mensaje"]
+                ]);
+                ATEB::guardarXMLFallido("NOTA", $not, $xml);
+                SAP::change_U_Filtro_SAP($not, "2", false);
                 guardarResultadoEnCpanel([
                     "tipo" => "NOTA",
                     "docEntry" => $doc,
@@ -495,14 +490,8 @@ function procesarDocumentos(callable $onLog = null)
                     "mensaje_error" => $res["mensaje"],
                     "pdf_url" => null
                 ]);
-                ATEB::guardarXMLFallido("NOTA", $not, $xml);
-                SAP::change_U_Filtro_SAP($not, "2", false);
-                $log([
-                    "type" => "error",
-                    "docType" => "NOTA",
-                    "DocEntry" => $not,
-                    "msg" => "❌ Error al firmar nota crédito: " . $res["mensaje"]
-                ]);
+
+
 
             }
         }

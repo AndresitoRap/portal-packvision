@@ -318,9 +318,9 @@ class ATEB
                 "RETEFUENTE" => formatoMoneda($retefuente, $contexto['moneda']),
                 "RETEIVA" => formatoMoneda($reteiva, $contexto['moneda']),
                 "RETEICA" => formatoMoneda($reteica, $contexto['moneda']),
-                "NETO_A_PAGAR" => formatoMoneda($neto, $contexto['moneda']),
-                "VALOR_TOTAL_EN_LETRAS" => numeroALetrasMoneda($subtotal, $contexto['moneda']),
-                "VALOR_NETO_EN_LETRAS" => numeroALetrasMoneda($subtotal + $iva - $contexto['retefuente'] - $contexto['reteiva'] - $contexto['reteica'], $contexto['moneda']),
+                "NETO_A_PAGAR" => formatoMoneda($neto + $detalle['RoundingDiffAmount'], $contexto['moneda']),
+                "VALOR_TOTAL_EN_LETRAS" => numeroALetrasMoneda($subtotal + $iva - $contexto['retefuente'] - $contexto['reteiva'] - $contexto['reteica'] + $detalle["RoundingDiffAmount"], $contexto['moneda']),
+                "VALOR_NETO_EN_LETRAS" => numeroALetrasMoneda($subtotal + $iva - $contexto['retefuente'] - $contexto['reteiva'] - $contexto['reteica'] + $detalle["RoundingDiffAmount"], $contexto['moneda']),
                 "VENDEDOR" => $vendedor,
                 "USUARIO_CREADOR" => mb_strtoupper($contexto['usuario_creador'] ?? 'N/A', 'UTF-8'),
                 "CUFE" => $cufe,
@@ -387,7 +387,7 @@ class ATEB
                 "mensaje" => "Documento firmado correctamente y PDF radicado",
                 "codigo" => "OK",
                 "cufe" => $cufe,
-                "rutaPdf" => $rutaPdf  
+                "rutaPdf" => $rutaPdf
             ];
 
         } catch (Exception $e) {
@@ -494,7 +494,7 @@ class ATEB
 
         $E01 = $xml->addChild("E01");
         $E01->addAttribute("FolioInterno", $prefijo . $folio);
-        $fecha = "2025-02-02";
+        // $fecha = "2025-02-02";
         $E01->addAttribute("Fecha", "$fecha $horaActual");
         $E01->addAttribute("TipoDeComprobante", $tipoOperacion == "20" ? '02' : '01');
         $E01->addAttribute("Moneda", "COP");
@@ -515,7 +515,7 @@ class ATEB
         $E01->addAttribute("fechaVencimiento", $fechaVenc);
         $E01->addAttribute("anticipo", "0");
         $E01->addAttribute("fechaAnticipo", $fechaAnticipo);
-        $E01->addAttribute("redondeoAplicado", "2");
+        $E01->addAttribute("redondeoAplicado", $detalle["RoundingDiffAmount"]);
         // $E01->addAttribute("totalBase", $subtotal);
         // $E01->addAttribute("subtotalTributos", $subtotal + $iva);
         $E01->addAttribute("cargos", '0.00');
@@ -1072,6 +1072,50 @@ class ATEB
         return $file;
     }
 
+    function subirXMLErrorACpanel(string $rutaLocal): ?string
+    {
+        if (!file_exists($rutaLocal)) {
+            return null;
+        }
+
+        $ch = curl_init("https://portal.empaquespackvision.com/back_portal_facturacion/api/upload_xml_error.php");
+
+        $post = [
+            'xml' => new CURLFile(
+                $rutaLocal,
+                'text/xml',
+                basename($rutaLocal)
+            )
+        ];
+
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'X-TOKEN: PACKVISION_SECURE_2025'
+            ],
+            CURLOPT_POSTFIELDS => $post,
+            CURLOPT_TIMEOUT => 30
+        ]);
+
+        $resp = curl_exec($ch);
+        curl_close($ch);
+
+        if (!$resp) {
+            return null;
+        }
+
+        $json = json_decode($resp, true);
+
+        return $json['ok'] ? $json['url'] : null;
+    }
+
+
 
 
 }
+
+
+
+
+

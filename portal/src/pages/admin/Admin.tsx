@@ -80,6 +80,8 @@ function Admin() {
           `${API_URL}/functions/xml/get_xml.php?tipo=${documentoSeleccionado.tipoDoc}&docEntry=${documentoSeleccionado.DocEntry}`
         );
 
+        console.log(res);
+
         const data = await res.json();
         if (data.ok) {
           setXmlContenido(data.xml);
