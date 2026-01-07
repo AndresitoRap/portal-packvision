@@ -34,7 +34,7 @@ function Admin() {
   const [selectedNota] = useState<Nota | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [statusMsgFactura] = useState("");
-  const [statusMsgNota] = useState(""); 
+  const [statusMsgNota] = useState("");
   const [xmlContenido, setXmlContenido] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -79,9 +79,8 @@ function Admin() {
         const res = await fetch(
           `${API_URL}/functions/xml/get_xml.php?tipo=${documentoSeleccionado.tipoDoc}&docEntry=${documentoSeleccionado.DocEntry}`
         );
-        const data = await res.json();
-        console.log(data);
 
+        const data = await res.json();
         if (data.ok) {
           setXmlContenido(data.xml);
         } else {
@@ -102,15 +101,14 @@ function Admin() {
 
     const loadLogs = async () => {
       try {
-        const res = await fetch(`${API_URL}/functions/process/get_logs.php`);   
+        const res = await fetch(`${API_URL}/functions/process/get_logs.php`);
         const data = await res.json();
 
-        if (!data.ok) return;
+        console.log(res);
 
-// 🔥 ESTE ES EL PUNTO CLAVE
-const orderedLogs = [...data.logs].sort(
-  (a, b) => a.id - b.id
-);
+        if (!data.ok || !Array.isArray(data.logs)) return;
+
+        const orderedLogs = data.logs;
 
         // Logs de texto (panel derecho)
         const textLogs: string[] = [];
@@ -511,18 +509,16 @@ const orderedLogs = [...data.logs].sort(
       </section>
 
       <footer className="footer">
-          <div className="footer-line"></div>
+        <div className="footer-line"></div>
 
-          <div className="footer-content">
-            <p className="footer-text">
-              Packvisión® SAS 2025. Todos los derechos reservados
-            </p>
+        <div className="footer-content">
+          <p className="footer-text">
+            Packvisión® SAS 2025. Todos los derechos reservados
+          </p>
 
-            <span className="footer-version">
-              v1.0.1
-            </span>
-          </div>
-        </footer>
+          <span className="footer-version">v1.0.1</span>
+        </div>
+      </footer>
 
       {isRefirmando && (
         <div className="refirmando-overlay">

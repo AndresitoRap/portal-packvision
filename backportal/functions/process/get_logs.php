@@ -19,13 +19,15 @@ try {
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $logs = array_map(function ($row) {
-        return [
-            "time" => $row["time"],
-            "type" => $row["type"],
-            "payload" => json_decode($row["payload"], true)
-        ];
-    }, array_reverse($rows)); // cronológico
+   $logs = array_map(function ($row) {
+    return [
+        "id" => (int)$row["id"],
+        "time" => $row["time"],
+        "type" => $row["type"],
+        "payload" => json_decode($row["payload"], true)
+    ];
+}, array_reverse($rows)); // cronológico
+
 
     echo json_encode($logs, JSON_UNESCAPED_UNICODE);
 

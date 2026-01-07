@@ -47,7 +47,6 @@ function Facturacion() {
           : getSapFolio(prefijo, folio);
 
       const url = `${API_URL}/functions/get_info_document_sap.php?folio=${sapFolio}&tipo=${tipo}`;
-      console.log(url);
 
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Error en la respuesta: ${res.status}`);
