@@ -494,6 +494,7 @@ class ATEB
 
         $E01 = $xml->addChild("E01");
         $E01->addAttribute("FolioInterno", $prefijo . $folio);
+        $fecha = "2025-02-02";
         $E01->addAttribute("Fecha", "$fecha $horaActual");
         $E01->addAttribute("TipoDeComprobante", $tipoOperacion == "20" ? '02' : '01');
         $E01->addAttribute("Moneda", "COP");

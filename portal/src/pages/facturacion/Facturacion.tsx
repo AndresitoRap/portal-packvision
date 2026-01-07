@@ -47,6 +47,7 @@ function Facturacion() {
           : getSapFolio(prefijo, folio);
 
       const url = `${API_URL}/functions/get_info_document_sap.php?folio=${sapFolio}&tipo=${tipo}`;
+      console.log(url);
 
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Error en la respuesta: ${res.status}`);
@@ -74,15 +75,20 @@ function Facturacion() {
 
   // Ajusta folio según prefijo
   const getSapFolio = (prefijo: string, folio: string) => {
-    const f = parseInt(folio, 10);
-    if (prefijo.toUpperCase() === "FEON")
-      return f < 10000 ? 100000 + f : 1000000 + f;
-    if (prefijo.toUpperCase() === "FEOC")
-      return f < 10000 ? 200000 + f : 2000000 + f;
-    if (prefijo.toUpperCase() === "FEPR")
-      return f < 10000 ? 5000000 + f : 5000000 + f;
-    return f;
-  };
+  const f = parseInt(folio, 10);
+
+  if (prefijo.toUpperCase() === "FEON")
+    return 1000000 + f;
+
+  if (prefijo.toUpperCase() === "FEOC")
+    return 2000000 + f;
+
+  if (prefijo.toUpperCase() === "FEPR")
+    return 5000000 + f;
+
+  return f;
+};
+
 
   useEffect(() => {
     fetch(`${API_URL}/functions/get_pdfs_folder.php`)
@@ -256,7 +262,7 @@ function Facturacion() {
             </p>
 
             <span className="footer-version">
-              v1.0.0
+              v1.0.1
             </span>
           </div>
         </footer>
