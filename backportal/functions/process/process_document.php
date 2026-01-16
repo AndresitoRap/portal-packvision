@@ -5,6 +5,7 @@ require __DIR__ . "/../../vendor/autoload.php";
 require __DIR__ . "/../../ateb/helpers_test.php";
 require __DIR__ . "/helper_document_cpanel.php";
 require __DIR__ . "/helpers.php";
+//Comentar linea para producción
 require __DIR__ . "/logger.php";
 
 use Dotenv\Dotenv;
@@ -12,6 +13,7 @@ $dotenv = Dotenv::createImmutable(__DIR__ . "/../..");
 $dotenv->load();
 
 
+//Quitar la funcion de writelog para producción
 // function writeLog(string $type, array $payload = [])
 // {
 //     $logFile = __DIR__ . "/../../storage/logs/firma_documentos.log";
@@ -105,8 +107,6 @@ function procesarDocumentos(callable $onLog = null)
 
     $log(["type" => "log", "msg" => "Obteniendo términos de pago SAP"]);
     $paymentTerms = SAP::getPaymentTermsCached();
-
-
 
 
     try {
@@ -218,10 +218,79 @@ function procesarDocumentos(callable $onLog = null)
             $log(["type" => "log", "msg" => "Obteniendo información del socio de negocio"]);
             $bussinesPartner = SAP::getBusinessPartners($detalle["CardCode"]);
 
-            $hcoRaw = SAP::getHCO(
-                preg_replace('/[^0-9\-]/', '', $bussinesPartner['CardCode'])
-            );
-            $hco = $hcoRaw['value'][0];
+            $hco = null;
+            $hcoRaw = null;
+
+
+            $cardCodeClean = preg_replace('/[^0-9\-]/', '', $bussinesPartner['CardCode']);
+
+            $hcoRaw = SAP::getHCO($cardCodeClean);
+
+            if (isset($hcoRaw['value']) && count($hcoRaw['value']) > 0) {
+                $hco = $hcoRaw['value'][0];
+
+                $log([
+                    "type" => "log",
+                    "msg" => "HCO encontrado por CardCode",
+                    "cardCode" => $cardCodeClean
+                ]);
+            } else {
+
+                /**
+                 * 2️⃣ Fallback → FederalTaxID sin DV
+                 */
+                $log([
+                    "type" => "warn",
+                    "msg" => "HCO no encontrado por CardCode, intentando por FederalTaxID",
+                    "cardCode" => $cardCodeClean,
+                    "raw_response" => $hcoRaw
+                ]);
+
+                $federalTaxId = $bussinesPartner['FederalTaxID'] ?? null;
+
+                if ($federalTaxId) {
+                    // 🔥 quitar DV (todo después del -)
+                    $nitSinDV = explode('-', $federalTaxId)[0];
+                    $nitSinDV = preg_replace('/\D/', '', $nitSinDV);
+
+                    $hcoRaw = SAP::getHCO($nitSinDV);
+
+                    if (isset($hcoRaw['value']) && count($hcoRaw['value']) > 0) {
+                        $hco = $hcoRaw['value'][0];
+
+                        $log([
+                            "type" => "log",
+                            "msg" => "HCO encontrado por FederalTaxID",
+                            "federalTaxId" => $nitSinDV
+                        ]);
+                    } else {
+                        $log([
+                            "type" => "error",
+                            "msg" => "HCO NO encontrado ni por CardCode ni por FederalTaxID",
+                            "cardCode" => $cardCodeClean,
+                            "federalTaxId" => $nitSinDV,
+                            "raw_response" => $hcoRaw
+                        ]);
+                    }
+                } else {
+                    $log([
+                        "type" => "error",
+                        "msg" => "Business Partner sin FederalTaxID",
+                        "bp" => $bussinesPartner
+                    ]);
+                }
+            }
+
+            /**
+             * ❌ Si después de todo no hay HCO → abortar limpio
+             */
+            if (!$hco) {
+                throw new Exception("No se pudo obtener HCO para el socio de negocio");
+            }
+
+            $log(["type" => "log", "msg" => "Generando XML desde SAP..."]);
+
+
 
 
             $log(["type" => "log", "msg" => "Generando XML desde SAP..."]);
@@ -479,19 +548,6 @@ function procesarDocumentos(callable $onLog = null)
                 ]);
                 ATEB::guardarXMLFallido("NOTA", $not, $xml);
                 SAP::change_U_Filtro_SAP($not, "2", false);
-                guardarResultadoEnCpanel([
-                    "tipo" => "NOTA",
-                    "docEntry" => $doc,
-                    "docNum" => (int) $detalle["DocNum"],
-                    "prefijo" => $prefijoDoc,
-                    "folio" => $folio,
-                    "cufe" => null,
-                    "estado" => "ERROR",
-                    "mensaje_error" => $res["mensaje"],
-                    "pdf_url" => null
-                ]);
-
-
 
             }
         }

@@ -335,7 +335,9 @@ class ATEB
             ];
 
             $itemsHtml = "";
-            foreach ($detalle["DocumentLines"] as $line) {
+            $lineasPDF = $contexto['lineasAgrupadas'] ?? $detalle["DocumentLines"];
+
+            foreach ($lineasPDF as $line) {
                 $itemsHtml .= "
         <tr>
             <td>{$line['ItemCode']}</td>
@@ -489,12 +491,16 @@ class ATEB
 
         $iva = $totalmontoconiva;
         $sapDocNum = (int) $detalle['DocNum'];
+        // Para entorno de prueba
+        // $prefijo = "SETT";
+        $folio = getNextTestFolio($prefijo, 1500);
+        // Para entorno de producción
         [$prefijo, $folio] = self::sapFolioToPrefijoFolio($sapDocNum);
 
 
         $E01 = $xml->addChild("E01");
         $E01->addAttribute("FolioInterno", $prefijo . $folio);
-        // $fecha = "2025-02-02";
+        // $fecha = "2026-01-09";
         $E01->addAttribute("Fecha", "$fecha $horaActual");
         $E01->addAttribute("TipoDeComprobante", $tipoOperacion == "20" ? '02' : '01');
         $E01->addAttribute("Moneda", "COP");
@@ -503,10 +509,6 @@ class ATEB
         $E01->addAttribute("Monto", "0.00");
         $E01->addAttribute("totalBase", "0.00");
         $E01->addAttribute("subtotalTributos", "0.00");
-
-
-        // $E01->addAttribute("Subtotal", $subtotal);
-        // $E01->addAttribute("Monto", number_format($subtotal + $iva, 2, '.', ''));
         $E01->addAttribute("Descuento", '0.0');
         $E01->addAttribute("formaDePago", $formaPago);
         $E01->addAttribute("Serie", $prefijo);
@@ -516,8 +518,6 @@ class ATEB
         $E01->addAttribute("anticipo", "0");
         $E01->addAttribute("fechaAnticipo", $fechaAnticipo);
         $E01->addAttribute("redondeoAplicado", $detalle["RoundingDiffAmount"]);
-        // $E01->addAttribute("totalBase", $subtotal);
-        // $E01->addAttribute("subtotalTributos", $subtotal + $iva);
         $E01->addAttribute("cargos", '0.00');
         $E01->addAttribute("totalItems", count($detalle["DocumentLines"]));
         $E01->addAttribute("tipoOperacion", $tipoOperacion);
@@ -556,6 +556,7 @@ class ATEB
         $EBC->addAttribute("Tipo", "E");
         $EBC->addAttribute("Name", $hco["Name"]);
         $EBC->addAttribute("Telephone", $bussinesPartner["Phone1"]);
+        //Para entorno de pruebas, para que no llegue al correo del cliente
         // $EBC->addAttribute("Mail", "sistemas@empaquespackvision.com");
         $EBC->addAttribute("Mail", $bussinesPartner["EmailAddress"]);
 
@@ -586,7 +587,45 @@ class ATEB
         $totalIVA = 0;
 
 
+        $lineasAgrupadas = [];
+
         foreach ($detalle["DocumentLines"] as $line) {
+
+            $key = implode('|', [
+                trim($line['ItemCode']),
+                trim($line['ItemDescription']),
+                number_format((float) $line['UnitPrice'], 6, '.', ''),
+                number_format((float) $line['DiscountPercent'], 6, '.', ''),
+                number_format((float) $line['Price'], 6, '.', '')
+            ]);
+
+            if (!isset($lineasAgrupadas[$key])) {
+
+                // Primera vez → clonar línea
+                $lineasAgrupadas[$key] = $line;
+
+            } else {
+
+                // Ya existe → sumar
+                $lineasAgrupadas[$key]['Quantity'] += (float) $line['Quantity'];
+                $lineasAgrupadas[$key]['LineTotal'] += (float) $line['LineTotal'];
+
+                // IVA / impuestos
+                if (isset($line['VatSum'])) {
+                    $lineasAgrupadas[$key]['VatSum'] =
+                        ($lineasAgrupadas[$key]['VatSum'] ?? 0) + (float) $line['VatSum'];
+                }
+
+                if (isset($line['TaxTotal'])) {
+                    $lineasAgrupadas[$key]['TaxTotal'] =
+                        ($lineasAgrupadas[$key]['TaxTotal'] ?? 0) + (float) $line['TaxTotal'];
+                }
+            }
+        }
+
+
+
+        foreach ($lineasAgrupadas as $line) {
 
             $taxCode = strtoupper(trim($line['TaxCode'] ?? ''));
             $tieneIVA = ($taxCode !== 'IVA_SAPV');
@@ -829,6 +868,7 @@ class ATEB
             "contexto" => [
                 "docNum" => $detalle["DocNum"],
                 "detalle" => $detalle,
+                "lineasAgrupadas" => array_values($lineasAgrupadas),
                 "tipoOperacion" => $tipoOperacion,
                 "bussinesPartner" => $bussinesPartner,
                 "hco" => $hco,

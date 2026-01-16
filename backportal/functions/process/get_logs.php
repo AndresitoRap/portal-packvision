@@ -48,3 +48,34 @@ echo json_encode([
     ]);
 }
 
+
+// header("Content-Type: application/json");
+// header("Access-Control-Allow-Origin: *");
+
+// $logFile = __DIR__ . "/../../storage/logs/firma_documentos.log";
+
+// if (!file_exists($logFile)) {
+//     echo json_encode([
+//         "ok" => true,
+//         "logs" => []
+//     ]);
+//     exit;
+// }
+
+// $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+// // últimos 200 eventos
+// $lines = array_slice($lines, -200);
+
+// // decodificar JSON línea por línea
+// $logs = array_values(array_filter(array_map(function ($l) {
+//     $j = json_decode($l, true);
+//     return is_array($j) ? $j : null;
+// }, $lines)));
+
+// echo json_encode([
+//     "ok" => true,
+//     "logs" => $logs
+// ], JSON_UNESCAPED_UNICODE);
+
+
